@@ -7,6 +7,10 @@ const ctx = canvas.getContext('2d'); // Nær í contextið fyrir canvasinn
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
+const img = document.getElementById('image');
+const imgW = img.width / 4;
+const imgH = img.height / 4;
+
 function random(min, max) { // Býr til random tölu á milli var:min og var:max
     const num = Math.floor(Math.random() * (max - min + 1)) + min;
     return num;
@@ -14,10 +18,11 @@ function random(min, max) { // Býr til random tölu á milli var:min og var:max
 
 function loop() { // A loop that goes through all the balls to animate them
     ctx.fillStyle = '#00000040'; // Teiknar skjáinn svartann
+    ctx.fillStyle = '#ff0000'; // Teiknar skjáinn rauðann
     ctx.fillRect(0, 0, width, height);
   
-    for (let i = 0; i < balls.length; i++) { // For loop for all the balls
-        balls[i].collisionDetect(); // Detects if ball is touching another ball; editors_note: "Hah gaaaaay!"
+    for(let i = 0; i < balls.length; i++) { // For loop for all the balls
+        /* balls[i].collisionDetect(); */ // Detects if ball is touching another ball; editors_note: "Hah gaaaaay!"
         balls[i].draw(); // Draws them
         balls[i].update(); // Moves the balls
     }
@@ -26,36 +31,34 @@ function loop() { // A loop that goes through all the balls to animate them
 }
 
 class Ball {
-    constructor(x, y, velX, velY, color, size) {
+    constructor(x, y, velX, velY, color) {
         this.x = x;
         this.y = y;
         this.velX = velX;
         this.velY = velY;
         this.color = color;
-        this.size = size;
+        this.width = imgW;
+        this.height = imgH;
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.drawImage(img, this.x, this.y, this.width, this.height)
     }
 
     update() {
-        if ((this.x + this.size) >= width) {
+        if((this.x + this.width) >= width) {
           this.velX = -(this.velX);
         }
       
-        if ((this.x - this.size) <= 0) {
+        if((this.x) <= 0) {
           this.velX = -(this.velX);
         }
       
-        if ((this.y + this.size) >= height) {
+        if((this.y + this.height) >= height) {
           this.velY = -(this.velY);
         }
       
-        if ((this.y - this.size) <= 0) {
+        if((this.y) <= 0) {
           this.velY = -(this.velY);
         }
       
@@ -63,35 +66,46 @@ class Ball {
         this.y += this.velY;
     }
 
-    collisionDetect() {
+    recolor() {
+        for (var i = 0; i < data.length; i += 4) {
+            var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            data[i]     = avg; // red
+            data[i + 1] = avg; // green
+            data[i + 2] = avg; // blue
+        }
+        ctx.putImageData(imageData, 0, 0);
+    };
+
+    /* collisionDetect() {
         for (let j = 0; j < balls.length; j++) {
             if (!(this === balls[j])) {
                 const dx = this.x - balls[j].x;
                 const dy = this.y - balls[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
         
-                if (distance < this.size + balls[j].size) {
+                if (distance < (this.width * this.height) + (balls[j].width * balls[j].height)) {
                     balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
                 }
             }
         }
-    }
+    } */
 }
 
 let balls = [];
-let size;
 let ball;
 
-while (balls.length < 25) {
-    size = random(10,20);
+while(balls.length < 25) {
     ball = new Ball(
-        random(0 + size,width - size),
-        random(0 + size,height - size),
-        random(-7,7),
-        random(-7,7),
+        random(0, width - imgW),
+        random(0, height - imgH),
+        random(-7, 7),
+        random(-7, 7),
         'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
-        size
     );
+    while(ball.velX == 0 || ball.velY == 0){
+        ball.velY = random(-7, 7);
+        ball.velX = random(-7, 7);
+    }
 
     balls.push(ball);
 }

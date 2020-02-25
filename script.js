@@ -16,12 +16,11 @@ function random(min, max) { // Býr til random tölu á milli var:min og var:max
     return num;
 }
 
-function loop() { // A loop that goes through all the balls to animate them
+function loop() { // Loopa sem fer í gegnum alla boltana í listanum og teiknar þá 
     ctx.fillStyle = '#00000040'; // Teiknar skjáinn svartann
-    ctx.fillStyle = '#ff0000'; // Teiknar skjáinn rauðann
     ctx.fillRect(0, 0, width, height);
   
-    for(let i = 0; i < balls.length; i++) { // For loop for all the balls
+    for(let i = 0; i < balls.length; i++) { // For loopa fyrir alla boltana
         /* balls[i].collisionDetect(); */ // Detects if ball is touching another ball; editors_note: "Hah gaaaaay!"
         balls[i].draw(); // Draws them
         balls[i].update(); // Moves the balls

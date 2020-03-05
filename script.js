@@ -23,7 +23,7 @@ for (let i = 1; i < 8; i++) {
     imgs.push(document.getElementById('image' + String(i)))
 }
 
-const imgW = imgs[0].width / 4;
+const imgW = imgs[0].width / 4; // dtdxs
 const imgH = imgs[0].height / 4;
 
 function random(min, max) { // Býr til random tölu á milli var:min og var:max

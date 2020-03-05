@@ -90,21 +90,17 @@ class Ball {
     } */
 }
 
-let balls = [];
-let ball;
+let balls = [], ball, speed = [];
 
 while(balls.length < 25) {
+    speed = [random(-7, -3), random(3, 7)];
     ball = new Ball(
-        random(0, width - imgW),
-        random(0, height - imgH),
-        random(-7, 7),
-        random(-7, 7),
+        random(0, width - imgW - 1),
+        random(0, height - imgH - 1),
+        speed[random(0, 1)],
+        speed[random(0, 1)],
         'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
     );
-    while(ball.velX == 0 || ball.velY == 0){
-        ball.velY = random(-7, 7);
-        ball.velX = random(-7, 7);
-    }
 
     balls.push(ball);
 }

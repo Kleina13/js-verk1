@@ -7,9 +7,24 @@ const ctx = canvas.getContext('2d'); // Nær í contextið fyrir canvasinn
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
-const img = document.getElementById('image');
-const imgW = img.width / 4;
-const imgH = img.height / 4;
+/* let block_to_insert;
+
+for (let i = 1; i < 8; i++) {
+    block_to_insert = document.createElement('img');
+    block_to_insert.src = 'dvd' + String(i) + '.png';
+    block_to_insert.id  = 'image' + String(i);
+    block_to_insert.style = "display: none;";
+    document.body.lastChild.insertAdjacentElement('beforebegin', block_to_insert);
+} */
+
+let imgs = new Array();
+
+for (let i = 1; i < 8; i++) {
+    imgs.push(document.getElementById('image' + String(i)))
+}
+
+const imgW = imgs[0].width / 4;
+const imgH = imgs[0].height / 4;
 
 function random(min, max) { // Býr til random tölu á milli var:min og var:max
     const num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -38,34 +53,46 @@ class Ball {
         this.color = color;
         this.width = imgW;
         this.height = imgH;
+        this.img = imgs[random(0, imgs.length - 1)];
     }
 
-    draw() {
-        ctx.drawImage(img, this.x, this.y, this.width, this.height)
+    draw() { // Teiknar myndina
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
 
-    update() {
-        if((this.x + this.width) >= width) {
+    changeImage() { // breytir um mynd
+        this.curImg = this.img;
+        do {
+            this.img = imgs[random(0, imgs.length - 1)];
+        } while(this.img === this.curImg);
+    }
+
+    update() { // uppfærir myndina
+        if((this.x + this.width) >= width) { // Ef myndinn snertir enda skjásins þá snýst hún við og skiptir um lit
           this.velX = -(this.velX);
+          this.changeImage();
         }
       
-        if((this.x) <= 0) {
+        if((this.x) <= 0) { // Ef myndinn snertir enda skjásins þá snýst hún við og skiptir um lit
           this.velX = -(this.velX);
+          this.changeImage();
         }
       
-        if((this.y + this.height) >= height) {
+        if((this.y + this.height) >= height) { // Ef myndinn snertir enda skjásins þá snýst hún við og skiptir um lit
           this.velY = -(this.velY);
+          this.changeImage();
         }
       
-        if((this.y) <= 0) {
+        if((this.y) <= 0) { // Ef myndinn snertir enda skjásins þá snýst hún við og skiptir um lit
           this.velY = -(this.velY);
+          this.changeImage();
         }
       
-        this.x += this.velX;
-        this.y += this.velY;
+        this.x += this.velX; // Færir myndina eftir X ásnum
+        this.y += this.velY; // Færir myndina eftir Y ásnum
     }
 
-    recolor() {
+    recolor() { // concepta WIP
         for (var i = 0; i < data.length; i += 4) {
             var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
             data[i]     = avg; // red
@@ -90,11 +117,11 @@ class Ball {
     } */
 }
 
-let balls = [], ball, speed = [];
+let balls = [], ball, speed = []; // Býr til breytur fyrir for loopuna
 
 while(balls.length < 25) {
     speed = [random(-7, -3), random(3, 7)];
-    ball = new Ball(
+    ball = new Ball( // Býr til bolta 
         random(0, width - imgW - 1),
         random(0, height - imgH - 1),
         speed[random(0, 1)],
@@ -102,7 +129,7 @@ while(balls.length < 25) {
         'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
     );
 
-    balls.push(ball);
+    balls.push(ball); // Bætir boltunum í arrayinn
 }
 
-loop();
+loop(); // Keyrir .essa loopu að EILÍFU!
